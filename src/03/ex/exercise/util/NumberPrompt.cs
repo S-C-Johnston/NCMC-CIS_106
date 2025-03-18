@@ -1,14 +1,16 @@
+using System.Text.RegularExpressions;
+
 namespace exercise.util
 {
     public class NumberPrompt
     {
-        public static bool IsValidNumericInput(string input)
+        public static double? NumericExtract(string input)
         {
-            if (String.IsNullOrWhiteSpace(input))
-            {
-                return false;
-            }
-            return true;
+            Regex numeric_regex = new Regex(@"[-.]?\d+[.]?\d*");
+            Match numeric_match = numeric_regex.Match(input);
+            return Double.TryParse(numeric_match.Value, out double result)
+            ? result
+            : null;
         }
     }
 }

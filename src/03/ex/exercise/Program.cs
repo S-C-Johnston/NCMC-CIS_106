@@ -1,3 +1,3 @@
 ﻿using exercise.util;
 
-Console.WriteLine(NumberPrompt.IsValidNumericInput(""));
+Console.WriteLine("Hello World");

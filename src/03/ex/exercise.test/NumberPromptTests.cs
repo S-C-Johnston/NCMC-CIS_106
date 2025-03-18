@@ -10,8 +10,8 @@ public class NumberPromptTests
     public void EmptyStringIsNotNumericInput()
     {
         string input = "";
-        bool result = NumberPrompt.IsValidNumericInput(input);
-        Assert.AreEqual(false, result);
+        double? result = NumberPrompt.NumericExtract(input);
+        Assert.IsNull(result);
     }
 
     [TestMethod]
@@ -27,8 +27,10 @@ public class NumberPromptTests
 
         foreach (KeyValuePair<string,Tuple<string,double>> input in inputs)
         {
-            double result = NumberPrompt.NumericExtract(input.Value.Item1);
-            Assert.AreEqual(input.Value.Item2, result, 1E-14);
+            double? result = NumberPrompt.NumericExtract(input.Value.Item1);
+            Assert.IsNotNull(result);
+            Console.WriteLine(result);
+            Assert.AreEqual(input.Value.Item2, result.Value, 1E-14);
         };
     }
 }

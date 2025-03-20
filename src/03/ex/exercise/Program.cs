@@ -1,3 +1,5 @@
 ﻿using exercise.util;
 
-Console.WriteLine("Hello World");
+NumberPrompt np = new();
+
+np.PromptForNumber();

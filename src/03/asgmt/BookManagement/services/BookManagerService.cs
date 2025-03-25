@@ -19,17 +19,18 @@ public class BookManagerService
 
     private Dictionary<int, Book> bookCollection = new();
 
-    private void DisplatchMethods()
+    public void Dispatch()
     {
         bool exit = false;
         do
         {
             BookManagementMenuItems current_choice = PromptForMenu();
-            if (BookManagementMenuItems.Exit == current_choice) continue;
+            if (BookManagementMenuItems.Exit == current_choice) break;
 
             switch (current_choice)
             {
                 default:
+                    Console.WriteLine("Not yet implemented!");
                     break;
             }
         } while (!exit);

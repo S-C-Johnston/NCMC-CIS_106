@@ -72,31 +72,4 @@ public class BookManagerService
         && Enum.IsDefined<BookManagementMenuItems>(result)));
         return result;
     }
-
-    /// <summary>
-    /// AddBook checks for ID uniqueness, and if everything checks out,
-    /// constructs a book with the given values and adds it to bookCollection.
-    /// </summary>
-    /// <param name="inputTitle"></param>
-    /// <param name="inputAuthor"></param>
-    /// <param name="inputGenre"></param>
-    /// <param name="inputID"></param>
-    /// <returns>false if the inputID exists, true if the operation
-    /// succeeds</returns>
-    public bool AddBook(string inputTitle,
-    string inputAuthor,
-    string inputGenre,
-    int inputID)
-    {
-        if (bookCollection.ContainsKey(inputID)) return false;
-
-        bookCollection.Add(inputID, new Book{
-            Title = inputTitle,
-            Author = inputAuthor,
-            Genre = inputGenre,
-            ID = inputID
-        });
-
-        return true;
-    }
 }

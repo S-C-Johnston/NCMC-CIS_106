@@ -166,6 +166,7 @@ public class BookManagerService
             Console.Write("Number for menu option?: ");
             string? user_input = Console.ReadLine();
             maybe_menu_item = user_input ?? "";
+            previously_run = true;
         } while (!
         (Enum.TryParse<BookManagementMenuItems>(maybe_menu_item, out result)
         && Enum.IsDefined<BookManagementMenuItems>(result)));

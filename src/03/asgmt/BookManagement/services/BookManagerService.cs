@@ -29,6 +29,10 @@ public class BookManagerService
 
             switch (current_choice)
             {
+                case BookManagementMenuItems.Add:
+                    Book new_book = PromptForBookDetails();
+                    bookCollection.TryAdd(new_book.ID, new_book);
+                    break;
                 default:
                     Console.WriteLine("Not yet implemented!");
                     break;

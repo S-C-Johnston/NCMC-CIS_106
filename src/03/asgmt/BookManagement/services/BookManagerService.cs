@@ -16,6 +16,9 @@ public enum BookManagementMenuItems
 
 public class BookManagerService
 {
+
+    private Dictionary<int, Book> bookCollection = new();
+
     private void DisplatchMethods()
     {
         bool exit = false;

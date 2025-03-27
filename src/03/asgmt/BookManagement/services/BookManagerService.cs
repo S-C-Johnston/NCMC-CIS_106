@@ -2,6 +2,10 @@ using BookManagement.Models;
 
 namespace BookManagement.Services;
 
+/// <summary>
+/// BookManagementMenuItems is what it looks like: an enum to handle discrete
+/// menu item choices.
+/// </summary>
 public enum BookManagementMenuItems
 {
     None,
@@ -13,6 +17,11 @@ public enum BookManagementMenuItems
     Exit
 }
 
+/// <summary>
+/// BookManagerService is meant to be instantiated and run with .Dispatch().
+/// It's rather a program in and of itself. The object tracks state internally,
+/// and does not export it in any way.
+/// </summary>
 public class BookManagerService
 {
 
@@ -27,6 +36,10 @@ public class BookManagerService
             { BookManagementMenuItems.Exit, "Exit the program" }
     };
 
+    /// <summary>
+    /// Dispatch is meant to be the entry point on utility of the
+    /// BookManagerService.
+    /// </summary>
     public void Dispatch()
     {
         bool exit = false;
@@ -213,6 +226,10 @@ public class BookManagerService
         };
     }
 
+    /// <summary>
+    /// PrintMenu merely loops through the MenuItemExplanatory Dictionary,
+    /// printing the contents in a nice format. As such, it is data-driven.
+    /// </summary>
     private void PrintMenu()
     {
         Console.WriteLine("\n---");
@@ -226,6 +243,13 @@ public class BookManagerService
         }
     }
 
+    /// <summary>
+    /// PromptForMenu prompts for a numeric option from the menu. It, too, is
+    /// data-driven. It has a secret bit of usability by way of getting the
+    /// BookManagerMenuItems enum to parse the string, if it's an exact match by
+    /// name it'll return that.
+    /// </summary>
+    /// <returns>BookManagementMenuItems enum entry</returns>
     private BookManagementMenuItems PromptForMenu()
     {
         bool previously_run = false;

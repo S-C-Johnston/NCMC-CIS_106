@@ -183,4 +183,31 @@ public class BookManagerService
         && Enum.IsDefined<BookManagementMenuItems>(result)));
         return result;
     }
+
+    /// <summary>
+    /// PrintSingleBookRecord does what it says on the tin, based on ID.
+    /// </summary>
+    /// <param name="bookID"></param>
+    /// <returns>If the ID provided doesn't exist, returns false; else
+    /// true</returns>
+    private bool PrintSingleBookRecord(int bookID)
+    {
+        if (!bookCollection.ContainsKey(bookID)) return false;
+
+        Book this_book = bookCollection[bookID];
+        Dictionary<string, string> book_properties = new() {
+        {"ID", this_book.ID.ToString()},
+        {"Title", this_book.Title.ToString()},
+        {"Author", this_book.Author.ToString()},
+        {"Genre", this_book.Genre.ToString()} };
+
+        foreach (KeyValuePair<string, string> property in book_properties)
+        {
+            Console.WriteLine("{0}: {1}",
+            property.Key,
+            property.Value
+            );
+        }
+        return true;
+    }
 }

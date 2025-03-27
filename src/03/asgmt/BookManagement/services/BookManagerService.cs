@@ -86,43 +86,24 @@ public class BookManagerService
     /// <returns>Book object filled with those details</returns>
     private Book PromptForBookDetails()
     {
-        bool previously_run = false;
-        bool valid_int = false;
-        bool valid_ID = false;
         int input_ID = default;
         bool user_satisfied = false;
         Dictionary<string, string> user_inputs = new(){
             {"Title", ""},
             {"Author", ""},
             {"Genre", ""} };
-
         do
         {
-            if (previously_run)
+            do
             {
-                if (!valid_int) Console.WriteLine("ID must be valid integer!");
-                if (!valid_ID) Console.WriteLine("ID must not already exist!");
-            }
-
-            string existing_ID = default != input_ID ? $" [{input_ID}]" : "";
-
-            Console.Write("\nEnter the book's integer ID{0}: ", existing_ID);
-            string user_input = Console.ReadLine() ?? "";
-            int this_loop_input_ID = default;
-            valid_int = int.TryParse(user_input, out this_loop_input_ID);
-            if ((default != this_loop_input_ID)
-            && (this_loop_input_ID != input_ID))
-            {
-                input_ID = this_loop_input_ID;
-            }
-            valid_ID = !bookCollection.Keys.Contains(input_ID);
-            if (string.IsNullOrWhiteSpace(user_input) && previously_run)
-            {
-                valid_int = valid_ID;
-            }
-
-            previously_run = true;
-            if (!valid_int || !valid_ID) continue;
+                if (PromptForBookID(out input_ID, input_ID))
+                {
+                    // PromptForBookID should return true if a book is found in
+                    // the collection.
+                    Console.WriteLine("ID for new book must not exist in collection!");
+                    if (default != input_ID) input_ID = default;
+                }
+            } while (default == input_ID);
 
             foreach (KeyValuePair<string, string> input_item in user_inputs)
             {
@@ -135,7 +116,7 @@ public class BookManagerService
                 input_item.Key,
                 existing_value);
 
-                user_input = Console.ReadLine() ?? "";
+                string user_input = Console.ReadLine() ?? "";
                 user_inputs[input_item.Key] = !string.IsNullOrWhiteSpace(user_input)
                 ? user_input
                 : input_item.Value;
@@ -163,7 +144,8 @@ public class BookManagerService
             }
         } while (!user_satisfied);
 
-        return new Book{
+        return new Book
+        {
             Title = user_inputs["Title"],
             Author = user_inputs["Author"],
             Genre = user_inputs["Genre"],

@@ -41,11 +41,71 @@ public class BookManagerService
                     Book new_book = PromptForBookDetails();
                     bookCollection.TryAdd(new_book.ID, new_book);
                     break;
+                case BookManagementMenuItems.Display:
+                    PromptAndPrintSingleBookRecord();
+                    break;
+                case BookManagementMenuItems.List:
+                    PrintAllBookRecords();
+                    break;
+                case BookManagementMenuItems.Remove:
+                    RemoveSingleBookRecord();
+                    break;
+                case BookManagementMenuItems.Help:
+                    PrintMenu();
+                    break;
                 default:
-                    Console.WriteLine("Not yet implemented!");
+                    Console.WriteLine("---\nNot yet implemented!---\n");
                     break;
             }
         } while (!exit);
+    }
+
+    /// <summary>
+    /// RemoveSingleBookRecord prompts for an ID and removes the corresponding
+    /// record, if any.
+    /// </summary>
+    /// <returns>false if the book was not found</returns>
+    private bool RemoveSingleBookRecord()
+    {
+        Console.WriteLine("\nProvide a book ID to remove");
+        if (!PromptForBookID(out int remove_book_ID))
+        {
+            Console.WriteLine($"ID {remove_book_ID} not found!");
+            return false;
+        }
+        Console.WriteLine("REMOVING: {0}",
+        bookCollection[remove_book_ID].Title);
+        bookCollection.Remove(remove_book_ID);
+        return true;
+    }
+
+    /// <summary>
+    /// PrintAllBookRecords does what it says on the tin.
+    /// </summary>
+    private void PrintAllBookRecords()
+    {
+        Console.WriteLine("\nBooks available:");
+        foreach (int key in bookCollection.Keys)
+        {
+            PrintSingleBookRecord(key);
+        }
+    }
+
+    /// <summary>
+    /// PromptAndPrintSingleBook prompts for an ID and prints that book, if
+    /// found.
+    /// </summary>
+    /// <returns>false if the book was not found</returns>
+    private bool PromptAndPrintSingleBookRecord()
+    {
+        Console.WriteLine("\nProvide a book ID to look up");
+        if (!PromptForBookID(out int display_book_ID))
+        {
+            Console.WriteLine($"ID {display_book_ID} not found!");
+            return false;
+        }
+        PrintSingleBookRecord(display_book_ID);
+        return true;
     }
 
     /// <summary>

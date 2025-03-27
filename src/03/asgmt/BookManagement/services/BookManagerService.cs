@@ -19,6 +19,15 @@ public class BookManagerService
 
     private Dictionary<int, Book> bookCollection = new();
 
+    private Dictionary<BookManagementMenuItems, string> MenuItemExplanatory = new() {
+            { BookManagementMenuItems.Add, "Add a book to the collection" },
+            { BookManagementMenuItems.List, "List all books from the collection" },
+            { BookManagementMenuItems.Display, "Display information about a book by ID" },
+            { BookManagementMenuItems.Remove, "Remove a book by ID" },
+            { BookManagementMenuItems.Help, "Print this menu" },
+            { BookManagementMenuItems.Exit, "Exit the program" }
+    };
+
     public void Dispatch()
     {
         bool exit = false;
@@ -134,14 +143,6 @@ public class BookManagerService
         };
     }
 
-    private Dictionary<BookManagementMenuItems, string> MenuItemExplanatory = new() {
-            { BookManagementMenuItems.Add, "Add a book to the collection" },
-            { BookManagementMenuItems.List, "List all books from the collection" },
-            { BookManagementMenuItems.Display, "Display information about a book by ID" },
-            { BookManagementMenuItems.Remove, "Remove a book by ID" },
-            { BookManagementMenuItems.Help, "Print this menu" },
-            { BookManagementMenuItems.Exit, "Exit the program" }
-    };
     private void PrintMenu()
     {
         foreach (var item_explanation in MenuItemExplanatory)

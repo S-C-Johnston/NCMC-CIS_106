@@ -49,6 +49,35 @@ public class BookManagerService
     }
 
     /// <summary>
+    /// PromptForBookID is agnostic to how a given ID is handled, it only checks for
+    /// validity in that it is nonzero or otherwise not a blank.
+    /// </summary>
+    /// <param name="bookID">Ultimately, the ID you want to keep</param>
+    /// <param name="existingID">The ID on-hand, if any</param>
+    /// <returns>bool condition of if the ID input exists in the collection</returns>
+    private bool PromptForBookID(out int bookID, int existingID = default)
+    {
+        bool valid_int;
+        string prompt_ID_string = (default != existingID)
+        ? $" [{existingID}]"
+        : "";
+        bool previously_run = false;
+
+        do
+        {
+            if (previously_run) Console.WriteLine("Input must be nonzero integer!");
+            Console.Write("\nEnter the book's integer ID{0}: ", prompt_ID_string);
+            string user_input = Console.ReadLine() ?? "";
+            if (string.IsNullOrWhiteSpace(user_input)) user_input = $"{existingID}";
+            valid_int = int.TryParse(user_input, out bookID);
+            if (default == bookID) valid_int = false;
+            previously_run = true;
+        } while (!valid_int);
+
+        return bookCollection.Keys.Contains(bookID);
+    }
+
+    /// <summary>
     /// PromptForBookDetails writes prompts in a loop. It is deliberatly not
     /// opinionated except with respect to the uniqueness of an ID, and then
     /// only because I don't want to litter side effects in the function. It

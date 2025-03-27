@@ -215,6 +215,7 @@ public class BookManagerService
 
     private void PrintMenu()
     {
+        Console.WriteLine("\n---");
         foreach (var item_explanation in MenuItemExplanatory)
         {
             Console.WriteLine("{0} {1,-8}: {2}",
@@ -268,6 +269,7 @@ public class BookManagerService
             property.Value
             );
         }
+        Console.WriteLine("---");
         return true;
     }
 }

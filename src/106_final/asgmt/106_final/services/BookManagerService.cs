@@ -1,6 +1,6 @@
-using BookManagement.Models;
+using final.Models;
 
-namespace BookManagement.Services;
+namespace final.Services;
 
 /// <summary>
 /// BookManagementMenuItems is what it looks like: an enum to handle discrete

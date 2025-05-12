@@ -1,5 +1,7 @@
+using final.Data;
 using final.Models;
 using final.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace final.Services;
 
@@ -9,7 +11,17 @@ namespace final.Services;
 public class BookService : IBookService
 {
 
-    private List<Book> bookCollection = new();
+    // When I remove this, it won't matter. But since DbContext jazz is a scoped
+    // subject, which means that it'll get handled for every request, the
+    // BookService has to also be scoped. Which means that the BookService also
+    // ends up losing its list between invocations. So, making bookCollection
+    // static preserves the state for the runtime of the program. Normally,
+    // shared-mutable state is a very bad thing to have, and will happily make
+    // race-conditions happen. This is just for me to understand what's
+    // happening underneath as I transition between using a list and using an
+    // actual db context.
+    private static List<Book> bookCollection = new();
+    private BookContext? _context;
 
     // I must implement the following:
     // Create: Add, "Add a book to the collection"
@@ -17,6 +29,14 @@ public class BookService : IBookService
     // Read: Display, "Display information about a book by ID"
     // Update: Edit, "Change details about the book"
     // Delete: Remove, "Remove a book by ID"
+
+    public BookService(BookContext? bookContext)
+    {
+        if (bookContext is not null)
+        {
+            _context = bookContext;
+        }
+    }
 
     /// <summary>
     /// AddBookRecord does what it says on the tin, checking for duplicates.

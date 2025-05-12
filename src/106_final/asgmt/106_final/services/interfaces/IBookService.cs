@@ -8,7 +8,7 @@ public interface IBookService
     /// </summary>
     /// <param name="book"></param>
     /// <returns>false if the book already exists</returns>
-    public (bool,int) AddBookRecord(Book book);
+    public (bool success, int index) AddBookRecord(Book book);
 
     /// <summary>
     /// GetAll does what it says on the tin.
@@ -30,8 +30,10 @@ public interface IBookService
     /// </summary>
     /// <param name="index">integer index to replace</param>
     /// <param name="book">replacement book data</param>
-    /// <returns></returns>
-    public bool ReplaceBookRecord(int index, Book book);
+    /// <returns>(bool success, int index)The index will contain either the
+    /// given index if successful, the count if out of range, or the index of
+    /// the existing book if non-unique.</returns>
+    public (bool success, int index) ReplaceBookRecord(int index, Book book);
 
     /// <summary>
     /// RemoveSingleBookRecord takes a numeric ID and removes the corresponding

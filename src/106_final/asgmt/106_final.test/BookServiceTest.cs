@@ -53,10 +53,11 @@ public class BookServiceTests
         //Arrange
         var myBookService = CreateBookService();
         myBookService.AddBookRecord(string_book);
-        //Act-Assert
-        Assert.AreEqual(
-            myBookService.ReplaceBookRecord(index, hhg),
-            expectation);
+        //Act
+        (bool replacement_success, int replacement_index) =
+        myBookService.ReplaceBookRecord(index, hhg);
+        //Assert
+        Assert.AreEqual(expectation, replacement_success);
     }
 
     /// <summary>
@@ -71,8 +72,38 @@ public class BookServiceTests
         myBookService.AddBookRecord(string_book);
         (bool hhg_success, int hhg_index) = myBookService.AddBookRecord(hhg);
         //Act
-        bool replacement_success = myBookService.ReplaceBookRecord(hhg_index, string_book);
+        (bool replacement_success, int replacement_index)=
+        myBookService.ReplaceBookRecord(hhg_index, string_book);
         //Assert
-        Assert.IsFalse(replacement_success);
+        Assert.IsTrue( hhg_index != replacement_index);
+    }
+
+    /// <summary>
+    /// Replacing a book record with a new, unique record should work.
+    /// </summary>
+    [TestMethod]
+    public void Story_BookService_AcceptsPut()
+    {
+        //Arrange
+        var myBookService = CreateBookService();
+        (bool add_success, int insert_index) =
+        myBookService.AddBookRecord(string_book);
+        //Act
+        (bool replacement_success, int replacement_index) =
+        myBookService.ReplaceBookRecord(insert_index, hhg);
+        //Assert
+        Assert.IsTrue(replacement_success &&
+        (insert_index == replacement_index));
+    }
+
+    [TestMethod]
+    public void GetAll_ReturnsALLBooks()
+    {
+        const int num_books = 2;
+        var myBookService = CreateBookService();
+        myBookService.AddBookRecord(string_book);
+        myBookService.AddBookRecord(hhg);
+
+        Assert.AreEqual(myBookService.GetAll().Count(), num_books);
     }
 }

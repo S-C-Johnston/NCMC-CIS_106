@@ -23,11 +23,12 @@ public class BookService : IBookService
     /// </summary>
     /// <param name="book"></param>
     /// <returns>false if the book already exists</returns>
-    public (bool,int) AddBookRecord(Book book)
+    public (bool success, int index) AddBookRecord(Book book)
     {
-        if (CheckForBook(book))
+        (bool present, int index) = CheckForBook(book);
+        if (present)
         {
-            return (false, -1);
+            return (false, index);
         }
         int new_index = bookCollection.Count();
         bookCollection.Add(book);
@@ -68,9 +69,11 @@ public class BookService : IBookService
     /// </summary>
     /// <param name="book">Book whose existence is checked</param>
     /// <returns>bool condition of if the book input exists in the collection</returns>
-    private bool CheckForBook(Book book)
+    private (bool present, int index) CheckForBook(Book book)
     {
-        return bookCollection.Exists( b => b == book);
+        int index = bookCollection.IndexOf(book);
+        if (index < 0) return (false, index);
+        return (true, index);
     }
 
     /// <summary>
@@ -79,21 +82,24 @@ public class BookService : IBookService
     /// </summary>
     /// <param name="index">integer index to replace</param>
     /// <param name="book">replacement book data</param>
-    /// <returns></returns>
-    public bool ReplaceBookRecord(int index, Book book)
+    /// <returns>(bool success, int index)The index will contain either the
+    /// given index if successful, the count if out of range, or the index of
+    /// the existing book if non-unique.</returns>
+    public (bool success, int index) ReplaceBookRecord(int index, Book book)
     {
         try
         {
             // This method should reject a replacement book which is a duplicate
             // of another book.
-            if (bookCollection.Exists(b => b == book)) return false;
+            (bool present, int present_index) = CheckForBook(book);
+            if (present) return (false, present_index);
             bookCollection[index] = book;
         }
         catch (ArgumentOutOfRangeException)
         {
-            return false;
+            return (false, bookCollection.Count());
         }
-        return true;
+        return (true, index);
     }
 
     /// <summary>

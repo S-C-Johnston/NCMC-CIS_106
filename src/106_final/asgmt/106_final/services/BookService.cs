@@ -22,14 +22,15 @@ public static class BookService
     /// </summary>
     /// <param name="book"></param>
     /// <returns>false if the book already exists</returns>
-    public static bool AddBookRecord(Book book)
+    public static (bool,int) AddBookRecord(Book book)
     {
         if (CheckForBook(book))
         {
-            return false;
+            return (false, -1);
         }
+        int new_index = bookCollection.Count();
         bookCollection.Add(book);
-        return true;
+        return (true, new_index);
     }
 
     /// <summary>

@@ -44,12 +44,14 @@ public static class BookService
     /// GetBookByIndex accepts a numeric ID and a callback exterior variable. It
     /// returns a bool, and the exterior value is modified if applicable.
     /// </summary>
+    /// <param name="retrieval_index">index of the book to retrieve</param>
+    /// <param name="book">externally modified Book</param>
     /// <returns>false if the book was not found</returns>
-    public static bool GetBookByIndex(int inputID, out Book? book)
+    public static bool GetBookByIndex(int retrieval_index, out Book? book)
     {
         try
         {
-            book = bookCollection[inputID];
+            book = bookCollection[retrieval_index];
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -62,7 +64,7 @@ public static class BookService
     /// <summary>
     /// CheckForBook does what it says on the tin
     /// </summary>
-    /// <param name="book">Book whose existence is checked for</param>
+    /// <param name="book">Book whose existence is checked</param>
     /// <returns>bool condition of if the book input exists in the collection</returns>
     private static bool CheckForBook(Book book)
     {
@@ -73,8 +75,8 @@ public static class BookService
     /// ReplaceBookRecord does what it says on the tin. The whole object at the
     /// given index is replaced.
     /// </summary>
-    /// <param name="index"></param>
-    /// <param name="book"></param>
+    /// <param name="index">integer index to replace</param>
+    /// <param name="book">replacement book data</param>
     /// <returns></returns>
     public static bool ReplaceBookRecord(int index, Book book)
     {
@@ -93,12 +95,13 @@ public static class BookService
     /// RemoveSingleBookRecord takes a numeric ID and removes the corresponding
     /// record, if any.
     /// </summary>
+    /// <param name="removal_index"></param>
     /// <returns>false if the book was not found</returns>
-    public static bool RemoveSingleBookRecord(int remove_book_ID)
+    public static bool RemoveSingleBookRecord(int removal_index)
     {
         try
         {
-            bookCollection.RemoveAt(remove_book_ID);
+            bookCollection.RemoveAt(removal_index);
         }
         catch (ArgumentOutOfRangeException)
         {

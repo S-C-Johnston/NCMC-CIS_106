@@ -84,9 +84,12 @@ public class BookService : IBookService
     {
         try
         {
-           bookCollection[index] = book;
+            // This method should reject a replacement book which is a duplicate
+            // of another book.
+            if (bookCollection.Exists(b => b == book)) return false;
+            bookCollection[index] = book;
         }
-        catch (IndexOutOfRangeException)
+        catch (ArgumentOutOfRangeException)
         {
             return false;
         }

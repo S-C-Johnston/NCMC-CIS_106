@@ -1,5 +1,9 @@
+using System.Data.Common;
+using final.Data;
 using final.Models;
 using final.Services;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace final.test;
 
@@ -20,7 +24,7 @@ public class BookServiceTests
     };
     public BookService CreateBookService()
     {
-        return new BookService();
+        return new BookService(null);
     }
 
     [TestMethod]

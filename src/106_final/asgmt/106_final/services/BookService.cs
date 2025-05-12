@@ -36,6 +36,11 @@ public class BookService : IBookService
         {
             _context = bookContext;
         }
+        else
+        {
+            var factory = new BookContextFactory();
+            _context = factory.CreateContext();
+        }
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 using final.Models;
 using final.Services;
+using final.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace final.Controllers;
@@ -8,8 +9,10 @@ namespace final.Controllers;
 [Route("[controller]")]
 public class BookController : ControllerBase
 {
-    public BookController()
+    IBookService BookService;
+    public BookController(IBookService bookService)
     {
+        this.BookService = bookService;
     }
 
     // GET all

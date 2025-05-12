@@ -1,14 +1,15 @@
 using final.Models;
+using final.Services.Interfaces;
 
 namespace final.Services;
 
 /// <summary>
 /// BookService is meant to be a source of truth data source of Books
 /// </summary>
-public static class BookService
+public class BookService : IBookService
 {
 
-    private static List<Book> bookCollection = new();
+    private List<Book> bookCollection = new();
 
     // I must implement the following:
     // Create: Add, "Add a book to the collection"
@@ -22,7 +23,7 @@ public static class BookService
     /// </summary>
     /// <param name="book"></param>
     /// <returns>false if the book already exists</returns>
-    public static (bool,int) AddBookRecord(Book book)
+    public (bool,int) AddBookRecord(Book book)
     {
         if (CheckForBook(book))
         {
@@ -36,7 +37,7 @@ public static class BookService
     /// <summary>
     /// GetAll does what it says on the tin.
     /// </summary>
-    public static List<Book> GetAll()
+    public List<Book> GetAll()
     {
         return bookCollection;
     }
@@ -48,7 +49,7 @@ public static class BookService
     /// <param name="retrieval_index">index of the book to retrieve</param>
     /// <param name="book">externally modified Book</param>
     /// <returns>false if the book was not found</returns>
-    public static bool GetBookByIndex(int retrieval_index, out Book? book)
+    public bool GetBookByIndex(int retrieval_index, out Book? book)
     {
         try
         {
@@ -67,7 +68,7 @@ public static class BookService
     /// </summary>
     /// <param name="book">Book whose existence is checked</param>
     /// <returns>bool condition of if the book input exists in the collection</returns>
-    private static bool CheckForBook(Book book)
+    private bool CheckForBook(Book book)
     {
         return bookCollection.Exists( b => b == book);
     }
@@ -79,7 +80,7 @@ public static class BookService
     /// <param name="index">integer index to replace</param>
     /// <param name="book">replacement book data</param>
     /// <returns></returns>
-    public static bool ReplaceBookRecord(int index, Book book)
+    public bool ReplaceBookRecord(int index, Book book)
     {
         try
         {
@@ -98,7 +99,7 @@ public static class BookService
     /// </summary>
     /// <param name="removal_index"></param>
     /// <returns>false if the book was not found</returns>
-    public static bool RemoveSingleBookRecord(int removal_index)
+    public bool RemoveSingleBookRecord(int removal_index)
     {
         try
         {

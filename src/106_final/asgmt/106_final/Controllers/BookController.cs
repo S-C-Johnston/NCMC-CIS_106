@@ -79,8 +79,9 @@ public class BookController : ControllerBase
     [HttpPut("{id:int}")]
     public IActionResult Update(int id, Book book)
     {
-        (bool success, int replacemnt_index) = BookService.ReplaceBookRecord(id, book);
-        if (replacemnt_index != id) return Conflict();
+        (bool success, int replacement_index) = BookService.ReplaceBookRecord(id, book);
+        if (replacement_index != id ||
+            (replacement_index == id && !success)) return Conflict();
         return success ? NoContent() : NotFound();
     }
 

@@ -50,7 +50,7 @@ public class BookServiceTests
     /// <param name="expectation">bool detailing the expected equivalence</param>
     [TestMethod]
     [DataRow(- 1, false)]
-    [DataRow(0, true)]
+    [DataRow(1, true)]
     [DataRow(42, false)]
     public void Story_BookService_FailsPutOnBadIndex(int index, bool expectation)
     {
@@ -108,6 +108,6 @@ public class BookServiceTests
         myBookService.AddBookRecord(string_book);
         myBookService.AddBookRecord(hhg);
 
-        Assert.AreEqual(myBookService.GetAll().Count(), num_books);
+        Assert.AreEqual(num_books, myBookService.GetAll().Count());
     }
 }

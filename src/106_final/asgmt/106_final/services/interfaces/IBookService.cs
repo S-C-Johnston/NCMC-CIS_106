@@ -26,20 +26,29 @@ public interface IBookService
 
     /// <summary>
     /// ReplaceBookRecord does what it says on the tin. The whole object at the
-    /// given index is replaced.
+    /// given Id is replaced.
     /// </summary>
-    /// <param name="index">integer index to replace</param>
+    /// <param name="Id">integer Id to replace</param>
     /// <param name="book">replacement book data</param>
-    /// <returns>(bool success, int index)The index will contain either the
-    /// given index if successful, the count if out of range, or the index of
+    /// <returns>(bool success, int Id)The Id will contain either the
+    /// given Id if successful, the count if out of range, or the Id of
     /// the existing book if non-unique.</returns>
-    public (bool success, int index) ReplaceBookRecord(int index, Book book);
+    public (bool success, int Id) ReplaceBookRecord(int Id, Book book);
 
     /// <summary>
     /// RemoveSingleBookRecord takes a numeric ID and removes the corresponding
     /// record, if any.
     /// </summary>
-    /// <param name="removal_index"></param>
+    /// <param name="removal_Id"></param>
     /// <returns>false if the book was not found</returns>
-    public bool RemoveSingleBookRecord(int removal_index);
+    public bool RemoveSingleBookRecord(int removal_Id);
+
+    /// <summary>
+    /// GetBookById accepts a numeric ID and a callback exterior variable. It
+    /// returns a bool, and the exterior value is modified if applicable.
+    /// </summary>
+    /// <param name="retrieval_Id">Id of the book to retrieve</param>
+    /// <param name="book">externally modified Book</param>
+    /// <returns>false if the book was not found</returns>
+    public bool GetBookById(int retrieval_Id, out Book? book);
 }

@@ -10,6 +10,9 @@ namespace final.Services;
 /// </summary>
 public class BookService : IBookService
 {
+    // -1 is the expected return value from IndexOf if the value doesn't
+    // exist in the list, from which this is modified.
+    const int NOT_FOUND_ID = -1;
 
     // When I remove this, it won't matter. But since DbContext jazz is a scoped
     // subject, which means that it'll get handled for every request, the
@@ -50,16 +53,16 @@ public class BookService : IBookService
     /// <returns>false if the book already exists</returns>
     public (bool success, int index) AddBookRecord(Book book)
     {
-        (bool present, int index) = CheckForBook(book);
+        (bool present, int present_id) = CheckForBook(book);
         if (present)
         {
-            return (false, index);
+            return (false, present_id);
         }
-        int new_index = bookCollection.Count();
-        bookCollection.Add(book);
+        //int new_index = bookCollection.Count();
+        //bookCollection.Add(book);
         _context?.Books.Add(book);
         _context?.SaveChanges();
-        return (true, new_index);
+        return (true, book.Id);
     }
 
     /// <summary>
@@ -67,7 +70,7 @@ public class BookService : IBookService
     /// </summary>
     public List<Book> GetAll()
     {
-        var bookList = _context?.Books.ToList() ?? bookCollection;
+        var bookList = _context?.Books.AsNoTracking().ToList() ?? bookCollection;
         if (bookCollection != bookList) {
             bookCollection = bookList;
         }
@@ -96,56 +99,98 @@ public class BookService : IBookService
     }
 
     /// <summary>
+    /// GetBookById accepts a numeric ID and a callback exterior variable. It
+    /// returns a bool, and the exterior value is modified if applicable.
+    /// </summary>
+    /// <param name="retrieval_Id">Id of the book to retrieve</param>
+    /// <param name="book">externally modified Book</param>
+    /// <returns>false if the book was not found</returns>
+    public bool GetBookById(int retrieval_Id, out Book? book)
+    {
+        book = _context?.Books.Find(retrieval_Id);
+        if (book is null) return false;
+        return true;
+    }
+
+    /// <summary>
     /// CheckForBook does what it says on the tin
     /// </summary>
     /// <param name="book">Book whose existence is checked</param>
     /// <returns>bool condition of if the book input exists in the collection</returns>
-    private (bool present, int index) CheckForBook(Book book)
+    private (bool present, int id) CheckForBook(Book book)
     {
-        int index = bookCollection.IndexOf(book);
-        if (index < 0) return (false, index);
-        return (true, index);
+        int id = Convert.ToInt32(
+            _context?.Books
+            .Where(w => w == book)
+            .Select(s => s.Id)
+            .FirstOrDefault());
+            // UNSUPPORTED TRANSLATION OF DEFAULTS WITH PARAMS
+            // I WASTED SO MUCH TIME HERE!!
+            // RAGE
+            // https://github.com/dotnet/efcore/issues/17783
+        if (id <= 0) return (false, id);
+        return (true, id);
     }
 
     /// <summary>
     /// ReplaceBookRecord does what it says on the tin. The whole object at the
-    /// given index is replaced.
+    /// given Id is replaced.
     /// </summary>
-    /// <param name="index">integer index to replace</param>
+    /// <param name="Id">integer Id to replace</param>
     /// <param name="book">replacement book data</param>
-    /// <returns>(bool success, int index)The index will contain either the
-    /// given index if successful, the count if out of range, or the index of
+    /// <returns>(bool success, int Id)The Id will contain either the
+    /// given Id if successful, the count if out of range, or the Id of
     /// the existing book if non-unique.</returns>
-    public (bool success, int index) ReplaceBookRecord(int index, Book book)
+    public (bool success, int Id) ReplaceBookRecord(int Id, Book book)
     {
         try
         {
             // This method should reject a replacement book which is a duplicate
             // of another book.
-            (bool present, int present_index) = CheckForBook(book);
-            if (present) return (false, present_index);
-            bookCollection[index] = book;
+            (bool present, int present_Id) = CheckForBook(book);
+            if (present) return (false, present_Id);
+            var target_book = _context?.Books.Find(Id);
+            if (target_book is not null)
+            {
+                target_book = book;
+                _context?.SaveChanges();
+            }
+            else
+            {
+                // I was relying on catching ArgumentNotInRangeException, and I
+                // forgot to handle the case where a target book to update can't
+                // be found.
+                return (false, NOT_FOUND_ID);
+            }
         }
-        catch (ArgumentOutOfRangeException)
+        catch (DbUpdateException)
         {
-            return (false, bookCollection.Count());
+            return (false, NOT_FOUND_ID);
         }
-        return (true, index);
+        return (true, Id);
     }
 
     /// <summary>
     /// RemoveSingleBookRecord takes a numeric ID and removes the corresponding
     /// record, if any.
     /// </summary>
-    /// <param name="removal_index"></param>
+    /// <param name="removal_Id"></param>
     /// <returns>false if the book was not found</returns>
-    public bool RemoveSingleBookRecord(int removal_index)
+    public bool RemoveSingleBookRecord(int removal_Id)
     {
         try
         {
-            bookCollection.RemoveAt(removal_index);
+            var removal_target = _context?.Books.Find(removal_Id);
+            if (removal_target is not null) {
+                _context?.Books.Remove(removal_target);
+                _context?.SaveChanges();
+            }
+            else {
+                // If the target can't be found, this is a 404
+                return false;
+            }
         }
-        catch (ArgumentOutOfRangeException)
+        catch (DbUpdateException)
         {
             return false;
         }

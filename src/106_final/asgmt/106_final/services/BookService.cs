@@ -119,15 +119,19 @@ public class BookService : IBookService
     /// <returns>bool condition of if the book input exists in the collection</returns>
     private (bool present, int id) CheckForBook(Book book)
     {
-        int id = Convert.ToInt32(
-            _context?.Books
-            .Where(w => w == book)
-            .Select(s => s.Id)
-            .FirstOrDefault());
-            // UNSUPPORTED TRANSLATION OF DEFAULTS WITH PARAMS
-            // I WASTED SO MUCH TIME HERE!!
-            // RAGE
-            // https://github.com/dotnet/efcore/issues/17783
+        var id = 0;
+        var booklist = _context?.Books.ToList();
+        var matches = booklist
+        .Where(w => book == w)
+        .Select(s => s.Id);
+        // UNSUPPORTED TRANSLATION OF DEFAULTS WITH PARAMS
+        // I WASTED SO MUCH TIME HERE!!
+        // RAGE
+        // https://github.com/dotnet/efcore/issues/17783
+        if (matches?.AsEnumerable().Count() > 0)
+        {
+            id = matches.AsEnumerable().First();
+        }
         if (id <= 0) return (false, id);
         return (true, id);
     }

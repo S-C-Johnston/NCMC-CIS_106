@@ -57,6 +57,8 @@ public class BookService : IBookService
         }
         int new_index = bookCollection.Count();
         bookCollection.Add(book);
+        _context?.Books.Add(book);
+        _context?.SaveChanges();
         return (true, new_index);
     }
 
@@ -65,7 +67,11 @@ public class BookService : IBookService
     /// </summary>
     public List<Book> GetAll()
     {
-        return bookCollection;
+        var bookList = _context?.Books.ToList() ?? bookCollection;
+        if (bookCollection != bookList) {
+            bookCollection = bookList;
+        }
+        return bookList;
     }
 
     /// <summary>
